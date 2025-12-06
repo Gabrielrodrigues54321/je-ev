@@ -60,7 +60,7 @@ body{
 /* ========== LAYOUT ========== */
 .app { min-height:100vh; display:flex; flex-direction:column; position: relative; z-index: 10; }
 
-/* Top bar */
+/* Top bar (MOBILE OTIMIZATION) */
 .topbar {
   position:fixed; left:0; right:0; top:0; height:64px; display:flex; align-items:center; gap:12px; padding:10px;
   background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent);
@@ -80,58 +80,62 @@ body{
   background: var(--card-bg); border-radius: var(--radius); padding:14px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color);
 }
 
-/* hero */
-.hero{ display:flex;gap:12px;align-items:center; }
+/* hero (MOBILE OTIMIZATION) */
+.hero{ display:flex;gap:12px;align-items:flex-start; /* Alinhamento superior para evitar que o texto fique espremido */ }
 .hero .art{
   width:100px;height:100px;border-radius:12px;flex:0 0 100px;overflow:hidden;background:var(--card-bg);
   display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--color-sub);
 }
 .h-sub{color:var(--color-sub);font-size:0.95rem;margin-bottom:10px}
 
-/* controls */
-.controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+/* controls (MOBILE OTIMIZATION) */
+.controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; /* Força quebra de linha em telas pequenas */ }
 .btn {
   background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:12px;color:inherit;font-weight:700;
+  white-space: nowrap; /* Evita quebra de palavras nos botões */
 }
 body.light .btn { border-color: rgba(0,0,0,0.1); }
 .btn.primary{ background:var(--accent); color:#06140c; border:none; box-shadow: 0 8px 20px rgba(29,185,84,0.08);}
 
 /* gallery */
 .gallery{ 
-  display:flex; gap:8px; overflow-x: auto; /* Permite scroll horizontal em mobile */ 
+  display:flex; gap:8px; overflow-x: auto; 
   padding-bottom:4px;
-  /* Corrigindo a proporção da imagem no mobile */
 }
 .gallery img{ 
-  width: 140px; /* Largura fixa para mobile scroll */
+  width: 140px; 
   height: 140px;
   border-radius:12px;
   object-fit:cover; 
-  flex-shrink: 0; /* Impede que a imagem encolha além da largura definida */
+  flex-shrink: 0; 
   box-shadow: 0 12px 30px rgba(0,0,0,0.5) 
 }
 
-/* motivos */
-.motivo{ background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); }
-body.light .motivo{ background: rgba(0,0,0,0.03); }
-
-/* carta typing */
-.carta{ white-space:pre-wrap; font-size:0.98rem; color:var(--color-sub); min-height:160px; }
-.final-phrase { text-align: center; margin-top: 50px; font-size: 1.4rem; opacity: 0.9; }
-
-/* player fixo embaixo */
+/* player fixo embaixo (MOBILE OTIMIZATION) */
 .player {
   position:fixed; left:8px; right:8px; bottom:12px; height:72px; border-radius:14px; 
   background: var(--player-bg);
   box-shadow:0 18px 40px rgba(0,0,0,0.6);
   border: 1px solid var(--border-color);
+  display:flex;align-items:center;gap:12px;padding:10px; z-index:1300; /* Garante que o player está por cima */
+}
+.player .cover{ width:52px;height:52px;border-radius:10px; overflow:hidden; background:var(--card-bg); display:flex;align-items:center;justify-content:center;}
+.player .info{ flex:1; min-width:0}
+.player .title{ font-weight:800; font-size:0.95rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; } /* Ajuste de texto para telas pequenas */
+.player .artist{ color:var(--color-sub); font-size:0.86rem; margin-top:2px}
+.player .controls{ display:flex; align-items:center; gap:10px; margin-left:10px }
+.icon-btn{ width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.04); display:flex;align-items:center;justify-content:center;}
+body.light .icon-btn{ background:rgba(0,0,0,0.08); }
+
+
+/* Desktop tweaks (mantido) */
+@media(min-width:880px){
+  .container{ padding:20px 40px; max-width:1100px; margin:92px auto }
+  .gallery img{ width:200px;height:200px; flex:0 0 200px }
+  .hero .art{ width:160px;height:160px; flex:0 0 160px }
+  .player{ left:40px; right:40px; height:78px }
 }
 
-/* progress */
-.progress > i{ background: linear-gradient(90deg,var(--accent), #6ef2b1); }
-
-/* INTRO SCREEN, END SCREEN */
-#intro { animation-delay: 2s; } /* Mantém a animação de introdução */
 </style>
 </head>
 <body class="dark">
@@ -144,15 +148,8 @@ body.light .motivo{ background: rgba(0,0,0,0.03); }
   <div class="intro-text">Carregando algo especial...</div>
 </div>
 
-<div id="overlay" class="overlay" aria-hidden="false">
+<div id="overlay" class="overlay" aria-hidden="true" style="display: none;">
   <div class="box">
-    <h2>💖 Acesso Secreto</h2>
-    <p style="opacity:.9">Dica: a senha é algo fofo...</p>
-    <input id="pw" type="password" placeholder="Digite a senha (ex.: bicudinha)" autocomplete="off" />
-    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
-      <button id="enterBtn" class="btn primary">Entrar</button>
-      <button id="tryLater" class="btn">Fechar</button>
-    </div>
     <p id="tryCount" style="margin-top:10px;color:var(--muted);font-size:0.9rem"></p>
   </div>
 </div>
@@ -178,7 +175,7 @@ body.light .motivo{ background: rgba(0,0,0,0.03); }
 
     <section class="card hero" id="inicio">
       <div class="art">
-        <img id="heroCover" src="https://picsum.photos/id/1025/100/100" alt="Capa" style="width:100%;height:100%;object-fit:cover;border-radius:12px">
+        <img id="heroCover" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROJvWCOhmc09TX8sp2FUd9LVRkRpc2CyPvlQ&s" alt="Capa" style="width:100%;height:100%;object-fit:cover;border-radius:12px">
       </div>
       <div class="meta">
         <div class="h-title">Évilin & Jaaziel — Nosso cantinho</div>
@@ -195,13 +192,13 @@ body.light .motivo{ background: rgba(0,0,0,0.03); }
     <section class="card" id="fotos">
       <h3 style="margin-bottom:10px">Galeria — Nossas fotos</h3>
       <div class="gallery" id="gallery">
-        <img src="https://picsum.photos/id/111/140/140" alt="foto1" loading="lazy">
-        <img src="https://picsum.photos/id/201/140/140" alt="foto2" loading="lazy">
-        <img src="https://picsum.photos/id/342/140/140" alt="foto3" loading="lazy">
-        <img src="https://picsum.photos/id/405/140/140" alt="foto4" loading="lazy">
-        <img src="https://picsum.photos/id/511/140/140" alt="foto5" loading="lazy">
-        <img src="https://picsum.photos/id/602/140/140" alt="foto6" loading="lazy">
-        <img src="https://picsum.photos/id/777/140/140" alt="foto7" loading="lazy">
+        <img src="Untitled foto 2.jpg" alt="foto1" loading="lazy">
+        <img src="Untitled foto 3.jpg" alt="foto2" loading="lazy">
+        <img src="Untitled1.jpg" alt="foto3" loading="lazy">
+        <img src="Untitled2.jpg" alt="foto4" loading="lazy">
+        <img src="Untitled3.jpg" alt="foto5" loading="lazy">
+        <img src="Untitled4.jpg" alt="foto6" loading="lazy">
+        <img src="Untitled5.jpg" alt="foto7" loading="lazy">
       </div>
       <p style="opacity:.8;margin-top:8px;font-size:0.95rem">nossas fotos simples, mas com memorias incriveis.</p>
     </section>
@@ -288,7 +285,7 @@ body.light .motivo{ background: rgba(0,0,0,0.03); }
   </main>
 
   <div class="player" role="region" aria-label="Player">
-    <div class="cover"><img id="playerCover" src="https://picsum.photos/id/1018/52/52" alt="cover" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+    <div class="cover"><img id="playerCover" src="https://i.scdn.co/image/ab67616d0000b2730e39e0b5b70d4890aa5e8096" alt="cover" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
     <div class="info">
       <div class="title" id="trackTitle">Meu Novo Mundo — Charlie Brown Jr.</div>
       <div class="artist" id="trackArtist">Jaaziel — Para Évilin</div>
@@ -300,8 +297,7 @@ body.light .motivo{ background: rgba(0,0,0,0.03); }
       <button id="next" class="icon-btn">⏭️</button>
     </div>
   </div>
-
-</div>
+  </div>
 
 <audio id="audio" preload="metadata" src="/Charlie_Brown_Jr_-_Meu_Novo_Mundo_(mp3.pm).mp3"></audio>
 
@@ -315,15 +311,11 @@ body.light .motivo{ background: rgba(0,0,0,0.03); }
 
 <script>
 /* ================== CONFIG ================== */
-const CORRECT_PW = "bicudinha";
+const CORRECT_PW = "bicudinha"; // Mantido, mas não usado
 const audio = document.getElementById('audio');
 
 /* ELEMENTS */
 const overlay = document.getElementById('overlay');
-const pwInput = document.getElementById('pw');
-const enterBtn = document.getElementById('enterBtn');
-const tryLater = document.getElementById('tryLater');
-const tryCount = document.getElementById('tryCount');
 const playBtn = document.getElementById('play');
 const playMain = document.getElementById('playMain');
 const prevBtn = document.getElementById('prev');
@@ -338,35 +330,27 @@ const toggleHearts = document.getElementById('toggleHearts');
 const finalPhrase = document.getElementById('finalPhrase');
 
 
-let tries = 0;
+/* O OVERLAY DE SENHA ESTÁ INVISÍVEL POR PADRÃO.
+   A página principal agora é carregada diretamente, e a música tenta tocar
+   assim que o JS é executado (sujeito às restrições de autoplay do navegador).
+*/
 
-/* ===== overlay logic ===== */
-enterBtn.addEventListener('click', tryPassword);
-pwInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') tryPassword(); });
-tryLater.addEventListener('click', ()=>{
-  overlay.style.display = 'none';
-  document.body.style.overflow = 'auto';
+// Tenta tocar a música assim que o script é carregado
+audio.play().catch(e => {
+    if (e.name === 'NotAllowedError') {
+         // O navegador bloqueou o autoplay, o usuário deve clicar no play
+    } else if (e.name === 'NotSupportedError') {
+        alert('O formato do arquivo de música não é suportado pelo seu navegador.');
+    }
 });
-function updateTryMsg(){ tryCount.textContent = tries ? `Tentativas: ${tries}` : ''; }
 
-function tryPassword(){
-  const val = pwInput.value.trim();
-  if(!val) return;
-  if(val === CORRECT_PW){
-    overlay.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    audio.play().catch(()=>{/* autoplay blocked */});
-  } else {
-    tries++;
-    updateTryMsg();
-    pwInput.value = '';
-    alert('Senha errada 😿 tenta de novo');
-    tryCount.style.color = '#ffb0c2';
-  }
-}
 
-/* ===== audio player controls ===== */
+/* ===== audio player controls (MANTIDO) ===== */
 function togglePlay(){
+  if (audio.error) {
+     alert('O áudio não pôde ser carregado. Verifique o caminho do arquivo mp3.');
+     return;
+  }
   if(audio.paused){
     audio.play();
     playBtn.textContent = '⏸️';
@@ -391,7 +375,18 @@ audio.addEventListener('timeupdate', ()=>{
 audio.addEventListener('play', ()=>{ playBtn.textContent = '⏸️'; });
 audio.addEventListener('pause', ()=>{ playBtn.textContent = '▶️'; });
 
-/* ===== gallery click to open image (mobile friendly) ===== */
+/* Avisa se o áudio não puder ser carregado */
+audio.addEventListener('error', function(e) {
+    console.error("Erro ao carregar áudio:", e);
+    playBtn.textContent = '❌';
+    playMain.textContent = '❌ Erro no Áudio';
+    alert('ERRO: O arquivo de música não foi encontrado! Verifique se o arquivo MP3 está na mesma pasta que o HTML ou se o link externo está correto.');
+    playBtn.disabled = true;
+    playMain.disabled = true;
+});
+
+
+/* ===== gallery click to open image (mobile friendly) (MANTIDO) ===== */
 gallery.addEventListener('click', (e)=>{
   const img = e.target.closest('img');
   if(!img) return;
@@ -399,27 +394,23 @@ gallery.addEventListener('click', (e)=>{
   const viewer = document.createElement('div');
   viewer.style.position='fixed'; viewer.style.inset='0'; viewer.style.background='rgba(0,0,0,0.95)';
   viewer.style.display='flex'; viewer.style.alignItems='center'; viewer.style.justifyContent='center'; viewer.style.zIndex=2000;
-  const big = document.createElement('img'); big.src = src; big.style.maxWidth='96%'; big.style.maxHeight='92%'; big.style.borderRadius='10px'; big.style.objectFit='contain'; // Melhor visualização em mobile
+  const big = document.createElement('img'); big.src = src; big.style.maxWidth='96%'; big.style.maxHeight='92%'; big.style.borderRadius='10px'; big.style.objectFit='contain'; 
   viewer.appendChild(big);
   viewer.addEventListener('click', ()=> viewer.remove());
   document.body.appendChild(viewer);
 });
 
-/* ===== Image error handling (AVISO SOBRE AS FOTOS) ===== */
+/* ===== Image error handling (AVISO SOBRE AS FOTOS) (MANTIDO) ===== */
 document.querySelectorAll('img').forEach(img => {
   img.onerror = function() {
     console.error("Erro ao carregar imagem: ", this.src);
     // Substitui por um placeholder local para evitar quebra de layout
     this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="#2d2d2d"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="#fff">Foto não encontrada</text></svg>';
     this.alt = 'Imagem não carregada';
-    // Se for uma imagem importante, dê um aviso.
-    if (this.id === 'heroCover' || this.id === 'playerCover') {
-        alert("Atenção: A imagem de capa principal/player não foi encontrada. Por favor, verifique o caminho do arquivo!");
-    }
   };
 });
 
-/* ===== carta typing (texto fornecido) ===== */
+/* ===== carta typing (texto fornecido) (MANTIDO) ===== */
 const cartaText = `Évilin...
 
 Desde o dia 9 de dezembro, tudo em mim começou a mudar de um jeito que eu nem sabia explicar.
@@ -463,20 +454,20 @@ Jaaziel ❤️`;
 
 function typeCarta(speed=18){
   cartaTexto.textContent = '';
-  finalPhrase.style.opacity = 0; // Esconde a frase final
+  finalPhrase.style.opacity = 0; 
   let k=0;
   const t = setInterval(()=>{
     if(k < cartaText.length) cartaTexto.textContent += cartaText.charAt(k++);
     else {
       clearInterval(t);
-      finalPhrase.style.opacity = 0.9; // Revela a frase final
+      finalPhrase.style.opacity = 0.9; 
     }
   }, speed);
 }
 replay.addEventListener('click', ()=> typeCarta(12));
 typeCarta(18);
 
-/* ===== download carta txt ===== */
+/* ===== download carta txt (MANTIDO) ===== */
 downloadCarta.addEventListener('click', ()=>{
   const blob = new Blob([cartaText], {type:'text/plain'});
   const url = URL.createObjectURL(blob);
@@ -485,7 +476,7 @@ downloadCarta.addEventListener('click', ()=>{
   URL.revokeObjectURL(url); a.remove();
 });
 
-/* ===== copy link ===== */
+/* ===== copy link (MANTIDO) ===== */
 copyLinkBtn.addEventListener('click', async ()=>{
   try{
     await navigator.clipboard.writeText(location.href);
@@ -495,7 +486,7 @@ copyLinkBtn.addEventListener('click', async ()=>{
   }
 });
 
-/* ===== hearts toggle (simple) ===== */
+/* ===== hearts toggle (simple) (MANTIDO) ===== */
 let heartsOn = true;
 toggleHearts.addEventListener('click', ()=>{
   heartsOn = !heartsOn;
@@ -508,7 +499,7 @@ toggleHearts.addEventListener('click', ()=>{
   }
 });
 
-/* ===== small hearts animation - CORRIGIDO PARA SER VERMELHO ===== */
+/* ===== small hearts animation (MANTIDO) ===== */
 let heartsInterval;
 function startHearts(){
   heartsInterval = setInterval(()=>{
@@ -520,7 +511,7 @@ function startHearts(){
     s.style.fontSize = (8 + Math.random()*28) + 'px';
     s.style.opacity = 0.95;
     s.style.zIndex = 400;
-    s.style.color = '#ff4d6d'; /* Coração vermelho para melhor visibilidade */
+    s.style.color = '#ff4d6d'; 
     document.body.appendChild(s);
     s.animate([{transform:'translateY(0)', opacity:1},{transform:'translateY(-120vh)', opacity:0}],{duration:7000,easing:'linear'});
     setTimeout(()=> s.remove(),7400);
@@ -529,7 +520,7 @@ function startHearts(){
 function stopHearts(){ clearInterval(heartsInterval); document.querySelectorAll('span').forEach(sp => { if(sp.textContent==='❤') sp.remove(); }); }
 startHearts(); 
 
-/* ===== accessibility: close overlay with ESC ===== */
+/* ===== accessibility: close overlay with ESC (MANTIDO, mas não faz nada útil agora) ===== */
 document.addEventListener('keydown', (ev)=>{
   if(ev.key === 'Escape'){
     if(overlay.style.display !== 'none'){
@@ -539,7 +530,7 @@ document.addEventListener('keydown', (ev)=>{
   }
 });
 
-/* ===== smooth scroll to sections when hero buttons clicked (CORRIGIDO) ===== */
+/* ===== smooth scroll to sections when hero buttons clicked (MANTIDO) ===== */
 document.getElementById('openGallery').addEventListener('click', (e)=> {
   e.preventDefault();
   document.getElementById('fotos').scrollIntoView({ behavior: 'smooth' });
@@ -549,19 +540,13 @@ document.getElementById('openMotivos').addEventListener('click', (e)=> {
   document.getElementById('motivos').scrollIntoView({ behavior: 'smooth' });
 });
 
-/* ===== make sure audio element exists; if not disable buttons ===== */
-if(!audio.canPlayType){
-  playMain.disabled = true;
-  playBtn.disabled = true;
-}
-
-/* ===== end screen timer ===== */
+/* ===== end screen timer (MANTIDO) ===== */
 setTimeout(() => {
   const endScreen = document.getElementById("end-screen");
   if(endScreen) endScreen.style.display = "flex";
 }, 65000); 
 
-/* ===== theme toggle logic ===== */
+/* ===== theme toggle logic (MANTIDO) ===== */
 const themeBtn = document.getElementById("theme-toggle");
 
 themeBtn.addEventListener("click", () => {
@@ -581,7 +566,7 @@ if (localStorage.getItem("theme") === "light") {
 }
 
 /* =======================================
-   ANIMAÇÃO DE PARTÍCULAS
+   ANIMAÇÃO DE PARTÍCULAS (MANTIDO)
    ======================================= */
 const canvas = document.getElementById("particles");
 if (canvas) {
