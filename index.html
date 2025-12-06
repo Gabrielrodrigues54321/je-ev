@@ -8,237 +8,133 @@
 
 <style>
 /* ================== VARS ================== */
+/* Configuração do Tema Claro */
 body.light {
-  background: #f6f6f6;
-  color: #222;
+  --bg-main: #f0f0f5;
+  --color-text: #222;
+  --color-sub: #555;
+  --accent: #008744; /* Verde escuro */
+  --muted: rgba(0,0,0,0.2);
+  --card-bg: #fff;
+  --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  --border-color: rgba(0,0,0,0.08);
+  --player-bg: linear-gradient(90deg, rgba(200,200,200,0.8), rgba(255,255,255,0.95));
   transition: 0.4s;
 }
 
-body.dark {
-  background: #0d0d0d;
-  color: #eee;
-  transition: 0.4s;
-}
-
-#theme-toggle {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  background: #00d26a;
-  color: #000;
-  cursor: pointer;
-  z-index: 9999;
-  font-weight: bold;
-}
-
+/* Variáveis para Tema Escuro (Padrão) */
 :root{
-  --bg1: #071021;
-  --bg2: linear-gradient(180deg,#0b1220,#1b2230);
+  --bg-main: linear-gradient(180deg,#0f1724,#071426);
+  --color-text: #e9eef6;
+  --color-sub: rgba(230,240,255,0.72);
   --accent: #1DB954; /* verde estilo player */
   --muted: rgba(255,255,255,0.16);
-  --glass: rgba(255,255,255,0.03);
-  --card: rgba(255,255,255,0.04);
+  --card-bg: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  --card-shadow: 0 8px 30px rgba(2,6,12,0.55);
+  --border-color: rgba(255,255,255,0.02);
+  --player-bg: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(255,255,255,0.02));
   --radius: 14px;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-/* ========== RESET ========== */
+/* ========== RESET & BASE ========== */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
-  background: linear-gradient(180deg,#0f1724,#071426);
-  color:#e9eef6;
+  background: var(--bg-main);
+  color: var(--color-text);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   overflow-x:hidden;
-  padding-bottom:86px; /* espaço pro player fixo */
+  padding-bottom:86px; 
+  transition: background 0.4s, color 0.4s;
+}
+
+#theme-toggle {
+  position: fixed; top: 15px; right: 15px; padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent); color: #000; cursor: pointer; z-index: 9999; font-weight: bold;
 }
 
 /* ========== EFEITO PARTÍCULAS NO FUNDO ========== */
-#particles {
-  position: fixed;
-  inset: 0;
-  z-index: 0; /* Fica abaixo de todo o conteúdo */
-}
+#particles { position: fixed; inset: 0; z-index: 0; }
 
 /* ========== LAYOUT ========== */
-/* Mobile-first: sidebar collapsible */
-.app {
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  position: relative; /* Para garantir que o conteúdo fique acima do canvas */
-  z-index: 10;
-}
+.app { min-height:100vh; display:flex; flex-direction:column; position: relative; z-index: 10; }
 
 /* Top bar */
 .topbar {
-  position:fixed;
-  left:0; right:0; top:0;
-  height:64px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-  backdrop-filter: blur(8px);
-  z-index:1200;
-  border-bottom:1px solid rgba(255,255,255,0.02);
+  position:fixed; left:0; right:0; top:0; height:64px; display:flex; align-items:center; gap:12px; padding:10px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent);
+  backdrop-filter: blur(8px); z-index:1200; border-bottom:1px solid var(--border-color);
 }
-.brand{
-  display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem;
-  margin-left:6px;
-}
+.brand{ display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.05rem; margin-left:6px; }
 .brand .logo {
   width:34px;height:34px;border-radius:8px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#072018;
   box-shadow: 0 6px 18px rgba(29,185,84,0.08);
 }
 
 /* main content */
-.container{
-  margin-top:76px;
-  padding:12px;
-  display:grid;
-  grid-template-columns: 1fr;
-  gap:14px;
-}
+.container{ margin-top:76px; padding:12px; display:grid; grid-template-columns: 1fr; gap:14px; }
 
 /* card style */
 .card{
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius: var(--radius);
-  padding:14px;
-  box-shadow: 0 8px 30px rgba(2,6,12,0.55);
-  border: 1px solid rgba(255,255,255,0.02);
+  background: var(--card-bg); border-radius: var(--radius); padding:14px; box-shadow: var(--card-shadow); border: 1px solid var(--border-color);
 }
 
 /* hero */
-.hero{
-  display:flex;gap:12px;align-items:center;
-}
+.hero{ display:flex;gap:12px;align-items:center; }
 .hero .art{
-  width:100px;height:100px;border-radius:12px;flex:0 0 100px;overflow:hidden;background:var(--card);
-  display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--muted);
+  width:100px;height:100px;border-radius:12px;flex:0 0 100px;overflow:hidden;background:var(--card-bg);
+  display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--color-sub);
 }
-.hero .meta{flex:1}
-.h-title{font-size:1.1rem;font-weight:800;margin-bottom:6px}
-.h-sub{color:rgba(230,240,255,0.72);font-size:0.95rem;margin-bottom:10px}
+.h-sub{color:var(--color-sub);font-size:0.95rem;margin-bottom:10px}
 
 /* controls */
 .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 .btn {
   background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:12px;color:inherit;font-weight:700;
 }
+body.light .btn { border-color: rgba(0,0,0,0.1); }
 .btn.primary{ background:var(--accent); color:#06140c; border:none; box-shadow: 0 8px 20px rgba(29,185,84,0.08);}
 
 /* gallery */
-.gallery{ display:flex; gap:8px; overflow:auto; padding-bottom:4px }
-.gallery img{ width:140px;height:140px;border-radius:12px;object-fit:cover; flex:0 0 140px; box-shadow: 0 12px 30px rgba(0,0,0,0.5) }
+.gallery{ 
+  display:flex; gap:8px; overflow-x: auto; /* Permite scroll horizontal em mobile */ 
+  padding-bottom:4px;
+  /* Corrigindo a proporção da imagem no mobile */
+}
+.gallery img{ 
+  width: 140px; /* Largura fixa para mobile scroll */
+  height: 140px;
+  border-radius:12px;
+  object-fit:cover; 
+  flex-shrink: 0; /* Impede que a imagem encolha além da largura definida */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5) 
+}
 
 /* motivos */
-.motivos{ display:grid; gap:10px; grid-template-columns: 1fr; }
-.motivo{ padding:12px;border-radius:10px;background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); display:flex; gap:12px; align-items:flex-start; }
-.motivo .num{ width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent)}
+.motivo{ background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); }
+body.light .motivo{ background: rgba(0,0,0,0.03); }
 
 /* carta typing */
-.carta{ white-space:pre-wrap; font-size:0.98rem; color:#eaf3ff; min-height:160px; }
+.carta{ white-space:pre-wrap; font-size:0.98rem; color:var(--color-sub); min-height:160px; }
+.final-phrase { text-align: center; margin-top: 50px; font-size: 1.4rem; opacity: 0.9; }
 
 /* player fixo embaixo */
 .player {
-  position:fixed;
-  left:8px; right:8px; bottom:12px;
-  height:72px; border-radius:14px; background: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(255,255,255,0.02));
-  display:flex;align-items:center;gap:12px;padding:10px; z-index:1300; box-shadow:0 18px 40px rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.03);
+  position:fixed; left:8px; right:8px; bottom:12px; height:72px; border-radius:14px; 
+  background: var(--player-bg);
+  box-shadow:0 18px 40px rgba(0,0,0,0.6);
+  border: 1px solid var(--border-color);
 }
-.player .cover{ width:52px;height:52px;border-radius:10px; overflow:hidden; background:var(--card); display:flex;align-items:center;justify-content:center;}
-.player .info{ flex:1; min-width:0}
-.player .title{ font-weight:800; font-size:0.95rem }
-.player .artist{ color:rgba(230,240,255,0.72); font-size:0.86rem; margin-top:2px}
-.player .controls{ display:flex; align-items:center; gap:10px; margin-left:10px }
-.icon-btn{ width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.02); display:flex;align-items:center;justify-content:center;}
 
 /* progress */
-.progress{ height:6px;background:rgba(255,255,255,0.04); border-radius:6px; overflow:hidden; margin-top:6px}
-.progress > i{ display:block;height:100%; background: linear-gradient(90deg,var(--accent), #6ef2b1); width:0%; }
+.progress > i{ background: linear-gradient(90deg,var(--accent), #6ef2b1); }
 
-/* senha overlay */
-.overlay{
-  position:fixed; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.85)); display:flex;align-items:center;justify-content:center; z-index:1400;
-}
-.overlay .box{ width:92%; max-width:420px; padding:18px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); text-align:center; border:1px solid rgba(255,255,255,0.03)}
-.overlay input{ width:100%; padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit }
-
-/* small screens tweaks */
-@media(min-width:880px){
-  .container{ padding:20px 40px; max-width:1100px; margin:92px auto }
-  .gallery img{ width:200px;height:200px; flex:0 0 200px }
-  .hero .art{ width:160px;height:160px; flex:0 0 160px }
-  .player{ left:40px; right:40px; height:78px }
-  .section{ max-width:900px; margin:110px auto }
-}
-
-/* INTRO SCREEN */
-#intro {
-  position: fixed;
-  inset: 0;
-  background: #0e0e0e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99999;
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 600;
-  animation: fadeOut 1.4s ease forwards;
-  animation-delay: 2s;
-}
-
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-.final-phrase {
-  text-align: center;
-  margin-top: 50px;
-  font-size: 1.4rem;
-  opacity: 0.9;
-}
-
-/* END SCREEN */
-#end-screen {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(6px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  z-index: 999999;
-}
-
-#end-screen .end-content {
-  text-align: center;
-  font-size: 1.4rem;
-  animation: fadeIn 1.8s ease;
-}
-
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-/* accessibility focus */
-button:focus, a:focus, input:focus{ outline:2px solid rgba(29,185,84,0.14); outline-offset:2px }
+/* INTRO SCREEN, END SCREEN */
+#intro { animation-delay: 2s; } /* Mantém a animação de introdução */
 </style>
 </head>
-<body>
+<body class="dark">
 
 <button id="theme-toggle">Alternar Tema</button>
 
@@ -273,7 +169,7 @@ button:focus, a:focus, input:focus{ outline:2px solid rgba(29,185,84,0.14); outl
     </div>
 
     <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
- 
+      <button id="copyLink" class="btn" title="Copiar link">Copiar link</button>
       <button id="toggleHearts" class="btn" title="Corações">Corações</button>
     </div>
   </div>
@@ -282,7 +178,7 @@ button:focus, a:focus, input:focus{ outline:2px solid rgba(29,185,84,0.14); outl
 
     <section class="card hero" id="inicio">
       <div class="art">
-        <img id="heroCover" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUwnwmPGk4bW8Y7PEAchztPS7qGYSFe4y_9A&s" alt="Capa" style="width:100%;height:100%;object-fit:cover;border-radius:12px">
+        <img id="heroCover" src="https://picsum.photos/id/1025/100/100" alt="Capa" style="width:100%;height:100%;object-fit:cover;border-radius:12px">
       </div>
       <div class="meta">
         <div class="h-title">Évilin & Jaaziel — Nosso cantinho</div>
@@ -299,13 +195,13 @@ button:focus, a:focus, input:focus{ outline:2px solid rgba(29,185,84,0.14); outl
     <section class="card" id="fotos">
       <h3 style="margin-bottom:10px">Galeria — Nossas fotos</h3>
       <div class="gallery" id="gallery">
-        <img src="/Untitled, foto 1.jpg" alt="foto1" loading="lazy">
-        <img src="/Untitled foto 2.jpg" alt="foto2" loading="lazy">
-        <img src="/Untitled foto 3.jpg" alt="foto3" loading="lazy">
-        <img src="/Untitled1.jpg" alt="foto4" loading="lazy">
-        <img src="/Untitled3.jpg" alt="foto1" loading="lazy">
-        <img src="/Untitled4.jpg" alt="foto2" loading="lazy">
-        <img src="/Untitled5.jpg" alt="foto3" loading="lazy">
+        <img src="https://picsum.photos/id/111/140/140" alt="foto1" loading="lazy">
+        <img src="https://picsum.photos/id/201/140/140" alt="foto2" loading="lazy">
+        <img src="https://picsum.photos/id/342/140/140" alt="foto3" loading="lazy">
+        <img src="https://picsum.photos/id/405/140/140" alt="foto4" loading="lazy">
+        <img src="https://picsum.photos/id/511/140/140" alt="foto5" loading="lazy">
+        <img src="https://picsum.photos/id/602/140/140" alt="foto6" loading="lazy">
+        <img src="https://picsum.photos/id/777/140/140" alt="foto7" loading="lazy">
       </div>
       <p style="opacity:.8;margin-top:8px;font-size:0.95rem">nossas fotos simples, mas com memorias incriveis.</p>
     </section>
@@ -333,20 +229,20 @@ button:focus, a:focus, input:focus{ outline:2px solid rgba(29,185,84,0.14); outl
       <p class="final-phrase" id="finalPhrase">✨ Que isso seja apenas o começo de algo inesquecível, espero que goste. ✨</p>
       <div style="text-align:center;margin-top:12px">
         <button id="replay" class="btn">Reescrever</button>
-     
+        <button id="downloadCarta" class="btn primary">📥 Baixar carta (txt)</button>
       </div>
     </section>
 
     <section id="maisCoisasEmbed" class="card" style="padding:12px;">
       <style>
-        /* Styles locais para manter o visual do seu site */
         #maisCoisasEmbed .section-row{display:flex;flex-direction:column;gap:12px}
         @media(min-width:880px){ #maisCoisasEmbed .section-row{flex-direction:row} }
-        .mt-card{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+        .mt-card{flex:1;background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid var(--border-color)}
         .timeline{list-style:none;padding:0;margin:0;font-size:0.95rem}
         .timeline li{margin-bottom:8px}
         .short-msgs{display:flex;gap:8px;overflow:auto;padding-bottom:6px}
         .msg{flex:0 0 220px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);min-height:80px;display:flex;align-items:center;justify-content:center;font-weight:600}
+        body.light .msg{background:rgba(0,0,0,0.04)}
         .goals ul{list-style:disc;margin-left:18px}
         .title-sm{font-weight:800;margin-bottom:8px}
       </style>
@@ -392,7 +288,7 @@ button:focus, a:focus, input:focus{ outline:2px solid rgba(29,185,84,0.14); outl
   </main>
 
   <div class="player" role="region" aria-label="Player">
-    <div class="cover"><img id="playerCover" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROJvWCOhmc09TX8sp2FUd9LVRkRpc2CyPvlQ&s" alt="cover" style="width:100%;height:100%;object-fit:cover"></div>
+    <div class="cover"><img id="playerCover" src="https://picsum.photos/id/1018/52/52" alt="cover" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
     <div class="info">
       <div class="title" id="trackTitle">Meu Novo Mundo — Charlie Brown Jr.</div>
       <div class="artist" id="trackArtist">Jaaziel — Para Évilin</div>
@@ -413,13 +309,14 @@ button:focus, a:focus, input:focus{ outline:2px solid rgba(29,185,84,0.14); outl
   <div class="end-content">
     <h2>Obrigado por chegar até aqui ❤️</h2>
     <p>Isso significa mais do que você imagina.</p>
-      <p>obrigado por tudo, que venham mais e mais anos</p>
+    <p>Obrigado por tudo, que venham mais e mais anos.</p>
   </div>
 </div>
 
 <script>
 /* ================== CONFIG ================== */
 const CORRECT_PW = "bicudinha";
+const audio = document.getElementById('audio');
 
 /* ELEMENTS */
 const overlay = document.getElementById('overlay');
@@ -427,21 +324,19 @@ const pwInput = document.getElementById('pw');
 const enterBtn = document.getElementById('enterBtn');
 const tryLater = document.getElementById('tryLater');
 const tryCount = document.getElementById('tryCount');
-
-const audio = document.getElementById('audio');
 const playBtn = document.getElementById('play');
 const playMain = document.getElementById('playMain');
 const prevBtn = document.getElementById('prev');
 const nextBtn = document.getElementById('next');
 const progressBar = document.getElementById('progressBar');
-
 const gallery = document.getElementById('gallery');
 const cartaTexto = document.getElementById('cartaTexto');
 const replay = document.getElementById('replay');
 const downloadCarta = document.getElementById('downloadCarta');
-
 const copyLinkBtn = document.getElementById('copyLink');
 const toggleHearts = document.getElementById('toggleHearts');
+const finalPhrase = document.getElementById('finalPhrase');
+
 
 let tries = 0;
 
@@ -452,8 +347,6 @@ tryLater.addEventListener('click', ()=>{
   overlay.style.display = 'none';
   document.body.style.overflow = 'auto';
 });
-
-/* show tries */
 function updateTryMsg(){ tryCount.textContent = tries ? `Tentativas: ${tries}` : ''; }
 
 function tryPassword(){
@@ -502,15 +395,28 @@ audio.addEventListener('pause', ()=>{ playBtn.textContent = '▶️'; });
 gallery.addEventListener('click', (e)=>{
   const img = e.target.closest('img');
   if(!img) return;
-  // open simple fullscreen viewer
   const src = img.src;
   const viewer = document.createElement('div');
   viewer.style.position='fixed'; viewer.style.inset='0'; viewer.style.background='rgba(0,0,0,0.95)';
   viewer.style.display='flex'; viewer.style.alignItems='center'; viewer.style.justifyContent='center'; viewer.style.zIndex=2000;
-  const big = document.createElement('img'); big.src = src; big.style.maxWidth='96%'; big.style.maxHeight='92%'; big.style.borderRadius='10px';
+  const big = document.createElement('img'); big.src = src; big.style.maxWidth='96%'; big.style.maxHeight='92%'; big.style.borderRadius='10px'; big.style.objectFit='contain'; // Melhor visualização em mobile
   viewer.appendChild(big);
   viewer.addEventListener('click', ()=> viewer.remove());
   document.body.appendChild(viewer);
+});
+
+/* ===== Image error handling (AVISO SOBRE AS FOTOS) ===== */
+document.querySelectorAll('img').forEach(img => {
+  img.onerror = function() {
+    console.error("Erro ao carregar imagem: ", this.src);
+    // Substitui por um placeholder local para evitar quebra de layout
+    this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="#2d2d2d"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="#fff">Foto não encontrada</text></svg>';
+    this.alt = 'Imagem não carregada';
+    // Se for uma imagem importante, dê um aviso.
+    if (this.id === 'heroCover' || this.id === 'playerCover') {
+        alert("Atenção: A imagem de capa principal/player não foi encontrada. Por favor, verifique o caminho do arquivo!");
+    }
+  };
 });
 
 /* ===== carta typing (texto fornecido) ===== */
@@ -557,11 +463,13 @@ Jaaziel ❤️`;
 
 function typeCarta(speed=18){
   cartaTexto.textContent = '';
+  finalPhrase.style.opacity = 0; // Esconde a frase final
   let k=0;
   const t = setInterval(()=>{
     if(k < cartaText.length) cartaTexto.textContent += cartaText.charAt(k++);
     else {
       clearInterval(t);
+      finalPhrase.style.opacity = 0.9; // Revela a frase final
     }
   }, speed);
 }
@@ -577,7 +485,15 @@ downloadCarta.addEventListener('click', ()=>{
   URL.revokeObjectURL(url); a.remove();
 });
 
-
+/* ===== copy link ===== */
+copyLinkBtn.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(location.href);
+    alert('Link copiado para a área de transferência!');
+  }catch(e){
+    prompt('Copie este link:', location.href);
+  }
+});
 
 /* ===== hearts toggle (simple) ===== */
 let heartsOn = true;
@@ -592,7 +508,7 @@ toggleHearts.addEventListener('click', ()=>{
   }
 });
 
-/* ===== small hearts animation ===== */
+/* ===== small hearts animation - CORRIGIDO PARA SER VERMELHO ===== */
 let heartsInterval;
 function startHearts(){
   heartsInterval = setInterval(()=>{
@@ -604,17 +520,14 @@ function startHearts(){
     s.style.fontSize = (8 + Math.random()*28) + 'px';
     s.style.opacity = 0.95;
     s.style.zIndex = 400;
+    s.style.color = '#ff4d6d'; /* Coração vermelho para melhor visibilidade */
     document.body.appendChild(s);
     s.animate([{transform:'translateY(0)', opacity:1},{transform:'translateY(-120vh)', opacity:0}],{duration:7000,easing:'linear'});
     setTimeout(()=> s.remove(),7400);
   }, 420);
 }
 function stopHearts(){ clearInterval(heartsInterval); document.querySelectorAll('span').forEach(sp => { if(sp.textContent==='❤') sp.remove(); }); }
-startHearts(); // start by default
-
-/* ===== initial player cover fallback if not found ===== */
-document.getElementById('heroCover').addEventListener('error', function(){ this.src = 'placeholder-cover.png'; });
-document.getElementById('playerCover').addEventListener('error', function(){ this.src = 'placeholder-cover.png'; });
+startHearts(); 
 
 /* ===== accessibility: close overlay with ESC ===== */
 document.addEventListener('keydown', (ev)=>{
@@ -626,9 +539,15 @@ document.addEventListener('keydown', (ev)=>{
   }
 });
 
-/* ===== small: open sections when hero buttons clicked ===== */
-document.getElementById('openGallery').addEventListener('click', ()=> location.href = '#fotos');
-document.getElementById('openMotivos').addEventListener('click', ()=> location.href = '#motivos');
+/* ===== smooth scroll to sections when hero buttons clicked (CORRIGIDO) ===== */
+document.getElementById('openGallery').addEventListener('click', (e)=> {
+  e.preventDefault();
+  document.getElementById('fotos').scrollIntoView({ behavior: 'smooth' });
+});
+document.getElementById('openMotivos').addEventListener('click', (e)=> {
+  e.preventDefault();
+  document.getElementById('motivos').scrollIntoView({ behavior: 'smooth' });
+});
 
 /* ===== make sure audio element exists; if not disable buttons ===== */
 if(!audio.canPlayType){
@@ -640,7 +559,7 @@ if(!audio.canPlayType){
 setTimeout(() => {
   const endScreen = document.getElementById("end-screen");
   if(endScreen) endScreen.style.display = "flex";
-}, 65000); // 65s depois
+}, 65000); 
 
 /* ===== theme toggle logic ===== */
 const themeBtn = document.getElementById("theme-toggle");
@@ -655,33 +574,19 @@ themeBtn.addEventListener("click", () => {
 // manter tema salvo
 if (localStorage.getItem("theme") === "light") {
   document.body.classList.add("light");
+  document.body.classList.remove("dark");
 } else {
   document.body.classList.add("dark");
+  document.body.classList.remove("light");
 }
 
-/* === Script da seção 'Mais Coisas' === */
-const editar = document.getElementById('editarMaisCoisas');
-const baixar = document.getElementById('baixarMaisCoisas');
-if(editar){ editar.addEventListener('click', ()=>{
-  const nova = prompt('Cole aqui o novo conteúdo HTML para a seção (substitui o bloco atual):','');
-  if(nova) document.getElementById('maisCoisasEmbed').outerHTML = nova;
-}); }
-if(baixar){ baixar.addEventListener('click', ()=>{
-  const txt = document.getElementById('maisCoisasEmbed').innerText;
-  const blob = new Blob([txt], {type:'text/plain'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'mais_coisas.txt'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
-}); }
-
 /* =======================================
-   NOVO: ANIMAÇÃO DE PARTÍCULAS
+   ANIMAÇÃO DE PARTÍCULAS
    ======================================= */
 const canvas = document.getElementById("particles");
-// Verificação para garantir que o elemento canvas existe
 if (canvas) {
     const ctx = canvas.getContext("2d");
     
-    // Ajusta o tamanho do canvas na inicialização e em redimensionamentos
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -691,7 +596,6 @@ if (canvas) {
 
     const particles = [];
 
-    // Cria as 60 partículas
     for (let i = 0; i < 60; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -708,14 +612,12 @@ if (canvas) {
       for (let p of particles) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        // Cor das partículas: verde claro/esmeralda com transparência
         ctx.fillStyle = "rgba(0, 255, 106, 0.4)"; 
         ctx.fill();
 
         p.x += p.dx;
         p.y += p.dy;
 
-        // Mantém as partículas dentro da tela
         if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
       }
